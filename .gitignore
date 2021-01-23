@@ -2,5 +2,6 @@
 **/target*
 **/.lsp*
 **/.clj-kondo*
+.clj-kondo*
 **/.nrepl-port*
 **/.calva*
