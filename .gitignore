@@ -5,3 +5,5 @@
 .clj-kondo*
 **/.nrepl-port*
 **/.calva*
+*.json
+*.sqlite
