@@ -8,5 +8,3 @@
       reversed
       ;if we arn't at the end, run the loop again with updated vectors and index
       (recur (str reversed (last left)) (clojure.string/join "" (drop-last left)) (inc index)))))
-
-(reverse-string "ryan")
