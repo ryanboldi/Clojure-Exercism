@@ -1,9 +1,12 @@
 (ns collatz-conjecture)
 
+
+(defn doOneStep
+  [num] (if (even? num)
+          (/ num 2)
+          (inc (* 3 num))))
+
 (defn collatz
-  ([num steps] (if (= num 1)
-                 steps
-                 (if (even? num)
-                   (collatz (/ num 2) (inc steps))
-                   (collatz (inc (* 3 num)) (inc steps)))))
-  ([num] (collatz num 0)))
+  ([num] (if (<= num 0)
+           (throw (Exception. "needs to be non-zero positive"))
+           (count (take-while (partial < 1) (iterate doOneStep num))))))
