@@ -1,6 +1,5 @@
 (ns collatz-conjecture)
 
-
 (defn do-one-step [num]
   (if (even? num)
     (/ num 2)
