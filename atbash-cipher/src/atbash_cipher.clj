@@ -14,7 +14,7 @@
   "splits the string into sets of 4 letters"
   [s]
   (->>
-   (partition 4 2 "" s)
+   (partition 4 4 "" s)
    (map (partial clojure.string/join ""))
    (clojure.string/join " ")))
 
@@ -22,4 +22,4 @@
   ;; your code goes here
   )
 
-(get_ciph_letter "z")
+(split_into_sections "Ryanisthebest")
