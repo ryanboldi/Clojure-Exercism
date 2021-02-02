@@ -1,16 +1,10 @@
 (ns bob)
-(use 'clojure.string)
 
-(defn question? [s] (ends-with? s "?"))
+(defn question? [s] (clojure.string/ends-with? s "?"))
 
 (defn yelling? [s]
-  ;for this to return true, there must be alphabetic characters, and they must all be uppercase
-  ;  
-  ;this checks if there ARE letters in the string in the first place
-  (if (some #(Character/isLetter %) s)
-    ;this checks that every character is either not a letter, or is both a letter AND capitalized
-    (every? #(or (not (Character/isLetter %)) (and (Character/isLetter %) (Character/isUpperCase %))) s)
-    false))
+  (let [letters (filter #(Character/isLetter %) s)]
+    (and (every? #(Character/isUpperCase %) letters) (seq letters))))
 
 (defn get-response [s]
   (if (empty? s)
@@ -24,4 +18,4 @@
         "Whatever."))))
 
 (defn response-for [s]
-  (get-response (trim-newline (trim s))))
+  (get-response (clojure.string/trim-newline (clojure.string/trim s))))
