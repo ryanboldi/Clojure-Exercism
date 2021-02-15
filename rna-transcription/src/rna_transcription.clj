@@ -1,5 +1,19 @@
 (ns rna-transcription)
+(use `[clojure.string])
 
-(defn to-rna [dna] ;; <- arglist goes here
-  ;; your code goes here
-)
+(def DNA "GCTA")
+(def RNA "CGAU")
+
+
+(defn d-to-r [letter]
+  (assert (index-of DNA letter))
+  (->> letter
+       (index-of DNA)
+       (nth RNA)
+       str))
+
+(defn to-rna [dna]
+  (->> dna
+       (#(split % #""))
+       (map d-to-r)
+       (join "")))
