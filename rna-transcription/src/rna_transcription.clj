@@ -7,8 +7,7 @@
   (let [out (->> dna
                  (map DNA->RNA)
                  (join ""))]
-    (if (->> (count out)
-             (= (count dna))
-             assert
-             not)
-      out)))
+    (assert (= (count dna) (count out)))
+    out))
+
+(to-rna "ACGT")
