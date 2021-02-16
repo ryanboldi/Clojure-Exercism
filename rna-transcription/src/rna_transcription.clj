@@ -1,19 +1,14 @@
 (ns rna-transcription)
 (use `[clojure.string])
 
-(def DNA "GCTA")
-(def RNA "CGAU")
-
-
-(defn d-to-r [letter]
-  (assert (index-of DNA letter))
-  (->> letter
-       (index-of DNA)
-       (nth RNA)
-       str))
+(def DNA->RNA {\G \C \C \G \T \A \A \U})
 
 (defn to-rna [dna]
-  (->> dna
-       (#(split % #""))
-       (map d-to-r)
-       (join "")))
+  (let [out (->> dna
+                 (map DNA->RNA)
+                 (join ""))]
+    (if (->> (count out)
+             (= (count dna))
+             assert
+             not)
+      out)))
