@@ -9,5 +9,3 @@
                  (join ""))]
     (assert (= (count dna) (count out)))
     out))
-
-(to-rna "ACGT")
