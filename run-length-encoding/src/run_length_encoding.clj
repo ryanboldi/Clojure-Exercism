@@ -7,14 +7,17 @@
 
 (defn reduce-map [text-maps]
   (reduce (fn [maps next]
-            (println maps next (last maps))
+            (println maps next)
             (if (= (:letter (last maps)) (:letter next))
-              (do (println "NICE") (conj maps (assoc (last maps) :letter (:letter (last maps)) :quantity (+ (:quantity (last maps)) (:quantity next)))))
+              (list (conj (vector (butlast maps))
+                          (assoc {}
+                                 :letter (:letter (last maps))
+                                 :quantity (+ (:quantity (last maps)) (:quantity next)))))
               (conj maps next)))
           ()
           text-maps))
 
-(reduce-map (str->map "RRRyan"))
+(reduce-map (str->map "AAAbAbbA"))
 
 (defn run-length-encode
   "encodes a string with run-length-encoding"
@@ -23,4 +26,3 @@
 (defn run-length-decode
   "decodes a run-length-encoded string"
   [cipher-text])
-
