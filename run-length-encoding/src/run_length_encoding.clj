@@ -6,18 +6,19 @@
   (map #(zipmap [:letter :quantity] [% 1]) text))
 
 (defn reduce-map [text-maps]
-  (reduce (fn [maps next]
-            (println maps next)
-            (if (= (:letter (last maps)) (:letter next))
-              (list (conj (vector (butlast maps))
-                          (assoc {}
-                                 :letter (:letter (last maps))
-                                 :quantity (+ (:quantity (last maps)) (:quantity next)))))
-              (conj maps next)))
-          ()
-          text-maps))
+  (reverse
+   (reduce
+    (fn [maps next]
+      (if (= (:letter (first maps)) (:letter next))
+        (conj (rest maps)
+              (assoc {}
+                     :letter (:letter (first maps))
+                     :quantity (+ (:quantity (first maps)) (:quantity next))))
+        (conj maps next)))
+    ()
+    text-maps)))
 
-(reduce-map (str->map "AAAbAbbA"))
+(reduce-map (str->map "RRyAAnnAR"))
 
 (defn run-length-encode
   "encodes a string with run-length-encoding"
