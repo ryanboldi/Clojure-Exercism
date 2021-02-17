@@ -1,11 +1,10 @@
 (ns rna-transcription)
-(use `[clojure.string])
 
-(def DNA->RNA {\G \C \C \G \T \A \A \U})
+(def dna->rna {\G \C \C \G \T \A \A \U})
 
 (defn to-rna [dna]
   (let [out (->> dna
-                 (map DNA->RNA)
-                 (join ""))]
+                 (map dna->rna)
+                 (apply str ""))]
     (assert (= (count dna) (count out)))
     out))
