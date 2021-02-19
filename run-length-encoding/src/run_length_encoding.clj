@@ -5,6 +5,10 @@
   [text]
   (map #(zipmap [:letter :quantity] [% 1]) text))
 
+(defn enc-str->map-list
+  "converts encoded strings to their respective map"
+  [text])
+
 (defn reduce-map
   "reduces a list of maps with a letter and quantity, adding quantity of identical letters side by side"
   [text-maps]
@@ -30,16 +34,16 @@
   [let-quan-map]
   (str (:quantity let-quan-map) (:letter let-quan-map)))
 
-(reduce-map (str->map-list "RASRASRASRR"))
-(map->enc-string {:letter \R :quantity 13})
-
 (defn run-length-encode
   "encodes a string with run-length-encoding"
   [plain-text]
   (->> plain-text
        str->map-list
+       reduce-map
        (#(map map->enc-string %))
-       (apply str))
+       (apply str)))
+
+(run-length-encode "AAAAAAAbbbbbbbbbbbbbbb")
 
 (defn run-length-decode
   "decodes a run-length-encoded string"
