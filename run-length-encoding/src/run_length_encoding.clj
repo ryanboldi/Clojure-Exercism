@@ -45,18 +45,34 @@
 
 ;------ DECODE
 
+(defn add-ones
+  "adds ones in the string before decoding"
+  [text]
+  (loop [index -1 final-text ""]
+    (if (= (dec (count text)) index)
+      final-text
+      (if (or (= index -1) (Character/isLetter (nth text index)))
+        (if (Character/isLetter (nth text (inc index)))
+          (recur (inc index) (s/join "" (vector final-text "1" (nth text (inc index)))))
+          (recur (inc index) (s/join "" (vector final-text (nth text (inc index))))))
+        (recur (inc index) (s/join "" (vector final-text (nth text (inc index)))))))))
+
 (defn run-length-decode
   "decodes a run-length-encoded string"
   [cipher-text]
   (let [letters
         (->> cipher-text
+             add-ones
              (#(s/split % #"\d+"))
              (remove #(= % "")))
         amounts
         (->> cipher-text
+             add-ones
              (#(s/split % #"[a-zA-Z\s+]"))
              (remove s/blank?)
              (map read-string))]
     (apply str (map (fn [letter amount] (apply str (repeat amount letter))) letters amounts))))
 
-(run-length-encode "XYZ")
+(run-length-decode "XYZ")
+
+(into "" '("d" "d" "d"))
