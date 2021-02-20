@@ -32,6 +32,18 @@
   [let-quan-map]
   (str (:quantity let-quan-map) (:letter let-quan-map)))
 
+(defn remove-ones
+  "removes ones from a string if not followed by another number"
+  [text]
+  (loop [index 0 final-text ""]
+    (if (or (empty? text) (= index (dec (count text))))
+      (s/join "" (vector final-text (last text)))
+      (if (= (nth text index) \1)
+        (if (Character/isDigit (nth text (inc index)))
+          (recur (inc index) (s/join "" (vector final-text (nth text index))))
+          (recur (inc index) final-text))
+        (recur (inc index) (s/join "" (vector final-text (nth text index))))))))
+
 (defn run-length-encode
   "encodes a string with run-length-encoding"
   [plain-text]
@@ -40,7 +52,7 @@
        reduce-map
        (#(map map->enc-string %))
        (apply str)
-       (remove #(= \1 %))
+       remove-ones
        (apply str)))
 
 ;------ DECODE
@@ -51,8 +63,8 @@
   (loop [index -1 final-text ""]
     (if (= (dec (count text)) index)
       final-text
-      (if (or (= index -1) (Character/isLetter (nth text index)))
-        (if (Character/isLetter (nth text (inc index)))
+      (if (or (= index -1) (Character/isLetter (nth text index)) (= (nth text index) \space))
+        (if (or (= (nth text (inc index)) \space) (Character/isLetter (nth text (inc index))))
           (recur (inc index) (s/join "" (vector final-text "1" (nth text (inc index)))))
           (recur (inc index) (s/join "" (vector final-text (nth text (inc index))))))
         (recur (inc index) (s/join "" (vector final-text (nth text (inc index)))))))))
@@ -72,7 +84,3 @@
              (remove s/blank?)
              (map read-string))]
     (apply str (map (fn [letter amount] (apply str (repeat amount letter))) letters amounts))))
-
-(run-length-decode "XYZ")
-
-(into "" '("d" "d" "d"))
