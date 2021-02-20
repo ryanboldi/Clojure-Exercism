@@ -22,11 +22,6 @@
     ()
     text-maps)))
 
-(defn map->string
-  "converts a map with a letter and quantity to its respective unencoded string"
-  [let-quan-map]
-  (apply str (repeat (:quantity let-quan-map) (:letter let-quan-map))))
-
 (defn map->enc-string
   "converts a map with a letter and quantity to its respective encoded string"
   [let-quan-map]
