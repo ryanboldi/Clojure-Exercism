@@ -1,13 +1,11 @@
 (ns run-length-encoding)
+(require 'clojure.string)
+(alias 's 'clojure.string)
 
 (defn str->map-list
   "returns a list of maps to represent a string with a 1 for each letter's value"
   [text]
   (map #(zipmap [:letter :quantity] [% 1]) text))
-
-(defn enc-str->map-list
-  "converts encoded strings to their respective map"
-  [text])
 
 (defn reduce-map
   "reduces a list of maps with a letter and quantity, adding quantity of identical letters side by side"
@@ -41,10 +39,24 @@
        str->map-list
        reduce-map
        (#(map map->enc-string %))
+       (apply str)
+       (remove #(= \1 %))
        (apply str)))
 
-(run-length-encode "AAAAAAAbbbbbbbbbbbbbbb")
+;------ DECODE
 
 (defn run-length-decode
   "decodes a run-length-encoded string"
-  [cipher-text])
+  [cipher-text]
+  (let [letters
+        (->> cipher-text
+             (#(s/split % #"\d+"))
+             (remove #(= % "")))
+        amounts
+        (->> cipher-text
+             (#(s/split % #"[a-zA-Z\s+]"))
+             (remove s/blank?)
+             (map read-string))]
+    (apply str (map (fn [letter amount] (apply str (repeat amount letter))) letters amounts))))
+
+(run-length-encode "XYZ")
