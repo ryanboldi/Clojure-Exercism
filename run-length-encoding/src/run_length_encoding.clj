@@ -82,4 +82,4 @@
 
 
 
-(map (juxt count first) (partition-by identity "aaaabbbb"))
+(map apply str (map (juxt count first) (partition-by identity "aaaabbbb")))
