@@ -5,14 +5,13 @@
 (defn run-length-encode
   "encodes a string with run-length-encoding"
   [plain-text]
-  (cond->> plain-text
-    :always (partition-by identity)
-    :always (map (juxt count first))
-    #(not (= (first %) 1)) (map #(apply str %))
-    #(= (first %) 1) (map #(last %))
-    :always (apply str)))
+  (->> plain-text
+    (partition-by identity)
+    (map (juxt count first))
+    (map #(apply str %))
+    (apply str)))
 
-(run-length-encode "AAAbbbb  d")
+(run-length-encode "AAAAAAvvv")
 
 ;------ DECODE
 
