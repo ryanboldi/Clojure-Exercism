@@ -2,16 +2,23 @@
 (require 'clojure.string)
 (alias 's 'clojure.string)
 
+(defn single?
+  "given a vector of count and letter, return true if count is 1"
+  [[count letter]]
+  (= count 1))
+
 (defn run-length-encode
   "encodes a string with run-length-encoding"
   [plain-text]
   (->> plain-text
     (partition-by identity)
     (map (juxt count first))
-    (map #(apply str %))
+    (map #(if (single? %)
+             (str (second %))
+             (apply str %)))
     (apply str)))
 
-(run-length-encode "AAAAAAvvv")
+(run-length-encode "AAAAAAvvve")
 
 ;------ DECODE
 
