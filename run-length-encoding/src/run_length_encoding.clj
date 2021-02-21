@@ -11,42 +11,31 @@
   "encodes a string with run-length-encoding"
   [plain-text]
   (->> plain-text
-    (partition-by identity)
-    (map (juxt count first))
-    (map #(if (single? %)
-             (str (second %))
-             (apply str %)))
-    (apply str)))
+       (partition-by identity)
+       (map (juxt count first))
+       (map #(if (single? %)
+               (str (second %))
+               (apply str %)))
+       (apply str)))
 
 (run-length-encode "AAAAAAvvve")
 
 ;------ DECODE
 
-(defn add-ones
-  "adds ones in the string before decoding"
-  [text]
-  (loop [index -1 final-text ""]
-    (if (= (dec (count text)) index)
-      final-text
-      (if (or (= index -1) (Character/isLetter (nth text index)) (= (nth text index) \space))
-        (if (or (= (nth text (inc index)) \space) (Character/isLetter (nth text (inc index))))
-          (recur (inc index) (s/join "" (vector final-text "1" (nth text (inc index)))))
-          (recur (inc index) (s/join "" (vector final-text (nth text (inc index))))))
-        (recur (inc index) (s/join "" (vector final-text (nth text (inc index)))))))))
+(re-seq #"(\d+)?([a-zA-Z\s+])" "A33B") ; => (["A" nil "A"] ["33B" "33" "B"])
+
+(defn get-count-vector [text]
+  (map #(if (nil? (second %))
+        (vector "1" (last %))
+        (vector (second %) (last %))) (re-seq #"(\d+)?([a-zA-Z\s+])" text)))
+
+(get-count-vector "33A33Bdef") ; => (["33" "A"] ["33" "B"] ["1" "d"] ["1" "e"] ["1" "f"])
 
 (defn run-length-decode
   "decodes a run-length-encoded string"
   [cipher-text]
-  (let [letters
-        (->> cipher-text
-             add-ones
-             (#(s/split % #"\d+"))
-             (remove #(= % "")))
-        amounts
-        (->> cipher-text
-             add-ones
-             (#(s/split % #"[a-zA-Z\s+]"))
-             (remove s/blank?)
-             (map read-string))]
-    (apply str (map (fn [letter amount] (apply str (repeat amount letter))) letters amounts))))
+  (->> cipher-text
+       get-count-vector
+       (map #(apply str (repeat (read-string (first %)) (second %))))
+       (apply str)))
 
