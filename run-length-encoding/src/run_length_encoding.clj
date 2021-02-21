@@ -79,3 +79,7 @@
              (remove s/blank?)
              (map read-string))]
     (apply str (map (fn [letter amount] (apply str (repeat amount letter))) letters amounts))))
+
+
+
+(map (juxt count first) (partition-by identity "aaaabbbb"))
