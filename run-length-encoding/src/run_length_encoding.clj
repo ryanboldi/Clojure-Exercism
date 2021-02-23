@@ -12,18 +12,16 @@
        (map encode)
        (apply str)))
 
-;------ DECODE
+;-- DECODE ---
 
 (defn decode [[_ nbr ltr]]
   (cond->> ltr
-    (not (nil? nbr)) (repeat (read-string nbr))
-    (nil? nbr) identity
-    :always (apply str)))
+    (not (nil? nbr)) (repeat (read-string nbr))))
 
 (defn run-length-decode
   "decodes a run-length-encoded string"
   [cipher-text]
   (->> cipher-text
        (re-seq #"(\d+)?([a-zA-Z\s+])")
-       (map decode)
+       (mapcat decode)
        (apply str)))
