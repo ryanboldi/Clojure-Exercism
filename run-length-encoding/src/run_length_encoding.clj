@@ -16,7 +16,7 @@
 
 (defn decode [[_ nbr ltr]]
   (cond->> ltr
-    (not (nil? nbr)) (repeat (read-string nbr))))
+    (seq nbr) (repeat (read-string nbr))))
 
 (defn run-length-decode
   "decodes a run-length-encoded string"
