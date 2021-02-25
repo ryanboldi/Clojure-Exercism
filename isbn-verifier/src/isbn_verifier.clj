@@ -1,21 +1,23 @@
 (ns isbn-verifier)
 
-(defn isbn? [isbn] ;; <- arglist goes here
-  ;; your code goes here
-)
-
-(defn get-int-list
-  [number]
-  (->> number
-       (iterate #(quot % 10))
-       (take-while #(> % 0))
-       (map #(mod % 10))
-       reverse))
-
 (defn sum-with-powers
   [number-list]
-  ())
+  (reduce +
+          (map (fn [base pow] (reduce * (repeat pow base)))
+               (map #(Character/digit % 10) number-list) 
+               (reverse (range 11)))))
 
-(range 11)
-(zipmap '(3 5 9 8 2 1 5 0 8 8) (reverse (range 10)))
+(defn isbn? [isbn]
+  (->> isbn
+       (remove #{\-})
+       (butlast)
+       (sum-with-powers)
+       (+ (if (= \X (last isbn))
+            10
+            (last isbn)))
+       #(mod % 11)
+       (= 0)))
+
+(isbn? "3-598-31508-8")
+(butlast "ryan")
 
