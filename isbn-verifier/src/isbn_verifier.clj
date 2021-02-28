@@ -6,7 +6,7 @@
   (reduce +
           (map (fn [base mult] (* base mult))
                (map #(Character/digit % 10) number-list)
-               (reverse (range 11)))))
+               (range 10 -1 -1))))
 
 (defn isbn? [isbn]
   (->> isbn
