@@ -1,23 +1,23 @@
-(ns isbn-verifier)
+(ns isbn-verifier
+  (:require [clojure.string :as str]))
 
-(defn sum-with-mults
-  [number-list]
-  (reduce +
-          (map (fn [base mult] (* base mult))
-               (map #(Character/digit % 10) number-list)
-               (reverse (range 11)))))
+(defn valid-isbn?
+  [isbn]
+  (boolean (re-matches #"^(\d{9}(\d|[X]))$" isbn)))
+
+(defn convert-digit-or-x
+  [chr]
+  (if (= \X chr)
+    10
+    (Character/digit chr 10)))
 
 (defn isbn? [isbn]
-  (->> isbn
-       (remove #{\-})
-       (butlast)
-       (remove #(re-matches #"[A-Za-z]" (str %)))
-       (sum-with-mults)
-       (+ (if (= \X (last isbn))
-            10
-            (Character/digit (last isbn) 10)))
-       (#(mod % 11))
-       (= 0)
-       (and (re-matches #"\d|[X]" (str (last isbn))))
-       (and (= 10 (count (remove #{\-} isbn))))
-       boolean))
+  (let [target (str/replace isbn "-" "")]
+    (and
+     (valid-isbn? target)
+     (->> target
+          (map convert-digit-or-x)
+          (map * (range 10 -1 -1))
+          (apply +)
+          (#(mod % 11))
+          zero?))))
