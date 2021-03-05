@@ -10,6 +10,7 @@
   (->> s
        (re-seq #"\w+")
        (map clojure.string/lower-case)
+       (sort-by first)
        (partition-by identity)
        (map count-words)
        (into {})))
