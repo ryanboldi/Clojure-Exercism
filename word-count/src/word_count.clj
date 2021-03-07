@@ -1,16 +1,8 @@
 (ns word-count
-  (:require [clojure.string]))
+  (:require [clojure.string :refer [lower-case]]))
 
-(defn count-words
-  [[frst & rst :as part]]
-  (hash-map frst (count part)))
-
-(defn word-count [s] ;; <- arglist goes here
-  ;; your code goes here
+(defn word-count [s]
   (->> s
+       (lower-case)
        (re-seq #"\w+")
-       (map clojure.string/lower-case)
-       (sort-by first)
-       (partition-by identity)
-       (map count-words)
-       (into {})))
+       (frequencies)))
