@@ -4,7 +4,7 @@
   ;; your code goes here
   )
 
-(def units {0 ""
+(def units {0 "zero"
             1 "one"
             2 "two"
             3 "three"
@@ -35,10 +35,35 @@
            8 "eighty"
            9 "ninety"})
 
+(def names {2 "hundred"
+            3 "thousand"
+            4 "million"
+            5 "billion"
+            6 "trillion"})
+
 (defn say-two-digit [inp]
   (let [num (map #(Character/digit % 10) (str inp))]
-    (if (= 1 (first num))
-      (get one-tens (second num))
-      (str (get tens (first num)) "-" (get units (second num))))))
+    (if (= 2 (count num))
+      (if (= 1 (first num))
+        (get one-tens (second num))
+        (if (zero? (second num))
+          (get tens (first num))
+          (str (get tens (first num)) "-" (get units (second num)))))
+      (get units (last num)))))
 
-(say-two-digit -1)
+(defn say-three-digit [inp]
+  (let [num (map #(Character/digit % 10) (str inp))]
+    (if (= 3 (count num))
+      (str (first num)
+           " hundred "
+           (say-two-digit
+            (Integer/parseInt
+             (str (second num) (last num))))))))
+
+(defn break-up-num [inp]
+  (let [stringified (reverse (str inp))]
+    (reverse (map #(apply str (reverse (apply list %))) (partition 3 3 [] stringified)))))
+
+(break-up-num 1213123)
+
+(say-three-digit 399)
