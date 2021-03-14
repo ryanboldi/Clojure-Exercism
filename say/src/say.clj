@@ -4,7 +4,8 @@
   ;; your code goes here
   )
 
-(def units {1 "one"
+(def units {0 ""
+            1 "one"
             2 "two"
             3 "three"
             4 "four"
@@ -14,7 +15,8 @@
             8 "eight"
             9 "nine"})
 
-(def one-tens {1 "eleven"
+(def one-tens {0 "ten"
+               1 "eleven"
                2 "twelve"
                3 "thirteen"
                4 "fourteen"
@@ -33,7 +35,10 @@
            8 "eighty"
            9 "ninety"})
 
-(defn say-two-digit [num]
-  (if (= 1 (first num))
-    (one-tens (first num))
-    (str (tens (first num)) "-" (units (second num)))))
+(defn say-two-digit [inp]
+  (let [num (map #(Character/digit % 10) (str inp))]
+    (if (= 1 (first num))
+      (get one-tens (second num))
+      (str (get tens (first num)) "-" (get units (second num))))))
+
+(say-two-digit -1)
