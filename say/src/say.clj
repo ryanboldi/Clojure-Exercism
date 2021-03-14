@@ -35,11 +35,11 @@
            8 "eighty"
            9 "ninety"})
 
-(def names {2 "hundred"
-            3 "thousand"
-            4 "million"
-            5 "billion"
-            6 "trillion"})
+(def names
+  `("trillion"
+    "billion"
+    "million"
+    "thousand"))
 
 (defn say-two-digit [inp]
   (let [num (map #(Character/digit % 10) (str inp))]
@@ -62,8 +62,10 @@
 
 (defn break-up-num [inp]
   (let [stringified (reverse (str inp))]
-    (reverse (map #(apply str (reverse (apply list %))) (partition 3 3 [] stringified)))))
+    (reverse (map #(Integer/parseInt (apply str (reverse (apply list %)))) (partition 3 3 [] stringified)))))
 
-(break-up-num 1213123)
+(defn insert-names [inp]
+  (let [broken (break-up-num inp)]
+    (interleave broken names)))
 
-(say-three-digit 399)
+(insert-names 314159265358979)
