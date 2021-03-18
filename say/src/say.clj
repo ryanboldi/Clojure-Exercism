@@ -36,7 +36,7 @@
            9 "ninety"})
 
 (def names
-  `(""
+  `(" "
     "thousand"
     "million"
     "billion"
@@ -62,15 +62,14 @@
              (str (second num) (last num))))))))
 
 (defn break-up-num [inp]
-  (let [stringified (reverse (str inp))]
-    (reverse 
+  (let [stringified (reverse (str inp))] 
      (map #(Integer/parseInt 
             (apply str 
                    (reverse (apply list %)))) 
-          (partition 3 3 [] stringified)))))
+          (partition 3 3 [] stringified))))
 
 (defn insert-names [inp]
   (let [broken (break-up-num inp)]
-    (interleave broken names)))
+    (reverse (interleave names broken))))
 
 (insert-names 314159265358979)
