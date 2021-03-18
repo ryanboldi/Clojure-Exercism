@@ -1,9 +1,5 @@
 (ns say)
 
-(defn number [num] ;; <- arglist goes here
-  ;; your code goes here
-  )
-
 (def units {0 "zero"
             1 "one"
             2 "two"
@@ -15,16 +11,16 @@
             8 "eight"
             9 "nine"})
 
-(def one-tens {0 "ten"
-               1 "eleven"
-               2 "twelve"
-               3 "thirteen"
-               4 "fourteen"
-               5 "fifteen"
-               6 "sixteen"
-               7 "seventeen"
-               8 "eighteen"
-               9 "nineteen"})
+(def one-tens {0 "ten "
+               1 "eleven "
+               2 "twelve "
+               3 "thirteen "
+               4 "fourteen "
+               5 "fifteen "
+               6 "sixteen "
+               7 "seventeen "
+               8 "eighteen "
+               9 "nineteen "})
 
 (def tens {2 "twenty"
            3 "thirty"
@@ -37,10 +33,10 @@
 
 (def names
   `(" "
-    "thousand"
-    "million"
-    "billion"
-    "trillion"))
+    " thousand "
+    " million "
+    " billion "
+    " trillion "))
 
 (defn say-two-digit [inp]
   (let [num (map #(Character/digit % 10) (str inp))]
@@ -55,11 +51,12 @@
 (defn say-three-digit [inp]
   (let [num (map #(Character/digit % 10) (str inp))]
     (if (= 3 (count num))
-      (str (first num)
+      (str (get units (first num))
            " hundred "
            (say-two-digit
             (Integer/parseInt
-             (str (second num) (last num))))))))
+             (str (second num) (last num)))))
+      (say-two-digit inp))))
 
 (defn break-up-num [inp]
   (let [stringified (reverse (str inp))] 
@@ -68,8 +65,16 @@
                    (reverse (apply list %)))) 
           (partition 3 3 [] stringified))))
 
+(defn get-names [inp]
+  (map say-three-digit inp))
+
+(say-three-digit 12)
+
 (defn insert-names [inp]
-  (let [broken (break-up-num inp)]
+  (let [broken (get-names (break-up-num inp))]
     (reverse (interleave names broken))))
 
-(insert-names 314159265358979)
+(defn number [num]
+  (apply str (insert-names num)))
+
+(number 20000)
