@@ -1,7 +1,7 @@
-(ns say)
+(ns say
+  (:require [clojure.string :as s]))
 
-(def units {0 "zero"
-            1 "one"
+(def units {1 "one"
             2 "two"
             3 "three"
             4 "four"
@@ -40,13 +40,15 @@
 
 (defn say-two-digit [inp]
   (let [num (map #(Character/digit % 10) (str inp))]
-    (if (= 2 (count num))
-      (if (= 1 (first num))
-        (get one-tens (second num))
-        (if (zero? (second num))
-          (get tens (first num))
-          (str (get tens (first num)) "-" (get units (second num)))))
-      (get units (last num)))))
+    (if (and (not (zero? (first num))) (zero? inp))
+      "zero"
+      (if (= 2 (count num))
+        (if (= 1 (first num))
+          (get one-tens (second num))
+          (if (zero? (second num))
+            (get tens (first num))
+            (str (get tens (first num)) "-" (get units (second num)))))
+        (get units (last num))))))
 
 (defn say-three-digit [inp]
   (let [num (map #(Character/digit % 10) (str inp))]
@@ -75,6 +77,8 @@
     (reverse (interleave names broken))))
 
 (defn number [num]
-  (apply str (insert-names num)))
+  (s/trim (apply str (insert-names num))))
+
+(say-two-digit 0)
 
 (number 20000)
