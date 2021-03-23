@@ -32,7 +32,7 @@
            9 "ninety"})
 
 (def names
-  `(" "
+  `(""
     " thousand "
     " million "
     " billion "
@@ -40,15 +40,13 @@
 
 (defn say-two-digit [inp]
   (let [num (map #(Character/digit % 10) (str inp))]
-    (if (and (not (zero? (first num))) (zero? inp))
-      "zero"
-      (if (= 2 (count num))
-        (if (= 1 (first num))
+    (if (= 2 (count num))
+      (if (= 1 (first num))
           (get one-tens (second num))
           (if (zero? (second num))
             (get tens (first num))
             (str (get tens (first num)) "-" (get units (second num)))))
-        (get units (last num))))))
+        (get units (last num)))))
 
 (defn say-three-digit [inp]
   (let [num (map #(Character/digit % 10) (str inp))]
@@ -70,15 +68,14 @@
 (defn get-names [inp]
   (map say-three-digit inp))
 
-(say-three-digit 12)
-
 (defn insert-names [inp]
   (let [broken (get-names (break-up-num inp))]
     (reverse (interleave names broken))))
 
 (defn number [num]
-  (s/trim (apply str (insert-names num))))
+  (assert (and (>= num 0) (< num 999999999999)))
+  (if (zero? num)
+    "zero"
+    (s/trim (apply str (insert-names num)))))
 
-(say-three-digit 0)
-
-(number 20000)
+(number 1000000)
