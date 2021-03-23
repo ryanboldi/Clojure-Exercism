@@ -79,6 +79,6 @@
 (defn number [num]
   (s/trim (apply str (insert-names num))))
 
-(say-two-digit 0)
+(say-three-digit 0)
 
 (number 20000)
